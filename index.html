@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title data-i18n-html="im_title_home">SMART PIXEL</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon.png" />
+    <style>
+        body {
+            background: url("index_bg.jpg") no-repeat center center fixed;
+            background-size:cover;
+            margin:0px;
+        }
+        .dn-btn {
+            background-color: white;
+            height:3rem;
+            min-width: 5rem;
+            border-radius:0.5rem;
+            color:#2CA3D5;
+            display: inline-block;
+            margin-bottom: 0;
+            padding-left:1rem;
+            padding-right:1rem;
+            font-size: 1.3rem;
+            line-height: 3rem;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            touch-action: manipulation;
+            cursor: pointer;
+            user-select: none;
+            background-image: none;
+            border: 1px solid #DCDCDC ;
+            font-family: "微软雅黑";
+        }
+        .guide {
+            margin-top:0.5rem;
+            background-color:#FFFFFF;
+            line-height:2.5rem;
+            font-size:1.1rem;
+            border:1px solid #DCDCDC;
+            text-align: left;
+            padding:1rem
+        }
+    </style>
+
+</head>
+<body>
+
+    <div style="background-color:#FFFFFF;height:5rem;font-size:1.5rem;font-weight:bold;line-height:5rem;text-align:center">
+        SMART PIXELS - 智能点控
+    </div>
+    <div id="weixin-android-guide" class="guide" style="display: none">
+        <div>
+            <span style="color:red">①</span><span id="msg_0">点击右上角的"..."</span>
+        </div>
+        <div>
+            <span style="color:red">②</span><span id="msg_1">选择"在浏览器打开"</span>
+        </div>
+    </div>
+    <div id="weixin-ios-guide"  class="guide" style="display: none">
+        <div>
+            <span style="color:red">①</span><span id="msg_2">点击右上角的"..."</span>
+        </div>
+        <div>
+            <span style="color:red">②</span><span id="msg_3">选择"在Safari中打开"</span>
+        </div>
+    </div>
+    <div id="safari-guide" class="guide" style="display: none">
+        <div>
+            <span style="color:red">①</span><span id="msg_4">选择屏幕底部的分享按钮</span> <img style="vertical-align:middle;height:1.5rem" src="images/sendto.png" />
+        </div><div>
+        <span style="color:red">②</span><span id="msg_5">选择"添加到主屏幕"，可以在主屏幕上生成应用图标。</span>
+        </div>
+    </div>
+    <div id="suggest-guide" class="guide" style="display: none">
+        <div><span style="color:red">①</span><span id="msg_6">建议选择在CHROME浏览器中打开本地址，然后根据提示添加到桌面图标，方便后续使用。</span></div>
+        <div><span style="color:red">②</span><span id="msg_7">您也可以收藏当前页面，方便下次使用。</span></div>
+        <div><span style="color:red">③</span><span id="msg_8">点击下方按钮，直接进入设备控制。</span></div>
+    </div>
+
+    <div id="add-div" style="width:100%;margin-top:2rem;margin-bottom:-1rem;text-align: center;display: none">
+        <div id="add-app" class="dn-btn" style="height:3rem;width:16rem">安装智能点控到桌面</div>
+    </div>
+    <div style="width:100%;margin-top:2rem;text-align: center">
+        <div id="start-app" class="dn-btn" style="width:16rem;height:3rem">启动智能点控</div>
+    </div>
+
+</body>
+
+<script>
+    var ib_add = {"zh":"安装智能点控到桌面", "en":"ADD TO HOME SCREEN", "ko":"SMART PIXELS 를바탕화면으로설치합니다"};
+    var ib_start = {"zh":"启动智能点控","en":"START SMART PIXELS", "ko":"SMART PIXELS 를 운행 합 니 다."};
+    var im = [];
+    im[0] = {"zh":"点击右上角的\"...\"","en":
+            "Click the \"...\" in the upper right corner", "ko":"오른쪽 위 에 있 는 \"...\" 누 르 시 면 됩 니 다."};
+    im[1] = {"zh":"选择\"在浏览器打开\"","en":"Select open in browser", "ko":"'브 라 우 저 에서 열기' 선택"};
+    im[2] = {"zh":"点击右上角的\"...\"","en":"Click the \"...\" in the upper right corner", "ko":"오른쪽 위 에 있 는 \"...\" 누 르 시 면 됩 니 다."};
+    im[3] = {"zh":"选择\"在Safari中打开\"","en":"Select open in Safari", "ko":"\"Safari 에서 열기\" 를 선택 하 십시오."};
+    im[4] = {"zh":"点击屏幕底部的发送按钮","en":"Click the send button at the bottom of the screen", "ko":"화면 아래쪽 보 내기 버튼 누 르 기"};
+    im[5] = {"zh":"选择\"添加到主屏幕\"，可以在主屏幕上生成应用图标。","en":"Select Add to home screen to generate application icons on the home screen.", "ko":"\"메 인 화면 에 추가 하기\" 를 선택 하면 메 인 화면 에 아이콘 을 생 성 할 수 있 습 니 다."};
+    im[6] = {"zh":"建议选择在CHROME浏览器中打开本地址。","en":"It is recommended to open this address in Chrome browser.", "ko":"이 주 소 를 CHROME 브 라 우 저 로 선택 하 시 는 것 을 권장 합 니 다."};
+    im[7] = {"zh":"您也可以收藏当前页面，方便下次使用。","en":"You can also collect the current page for next use.", "ko":"현재 페이지 를 저장 하 셔 서 다음 에 사용 하 시기 편 하 실 수 있 습 니 다."};
+    im[8] = {"zh":"或者点击下方按钮，直接进入设备控制。","en":"Or click the button below to directly enter the device control.", "ko":"또는 아래 단 추 를 누 르 면 장치 제어 에 바로 들 어 갑 니 다."};
+
+
+    var canInstall = false;
+
+    function setLange() {
+        var lang = navigator.language||navigator.userLanguage;
+        lang = lang.substr(0, 2);
+        if("zh,en,ko".indexOf(lang) == -1) {
+            lang = "en";
+        }
+        addBtn.innerHTML = ib_add[lang];
+        startBtn.innerHTML = ib_start[lang];
+        for(var i = 0; i < 9; i ++) {
+            document.getElementById("msg_" + i).innerHTML = im[i][lang];
+        }
+    }
+
+    function getUrlPath() {
+        var t = document.location.toString().split("//")[1];
+        var ps = t.indexOf("/");
+        t = t.substring(ps);
+        var pe = t.lastIndexOf("/");
+        var path = "/";
+        if(pe > -1) {
+            path = t.substring(0, pe) + "/";
+        }
+        return path;
+    }
+
+    function checkNav() {
+        var ret = {weixin:false,mobile:false,android:false,window:false,linux:false,apple:false,firefox:false, ie:false,chrome:false,safari:false,iphone:false,ipad:false};
+        var ua = navigator.userAgent.toLowerCase();
+        if(ua.indexOf("windows") >= 0) {
+            ret.windown = true;
+        };
+        if(ua.indexOf("micromessenger") >= 0) ret.weixin = true;
+        if(ua.indexOf("windows") >= 0) ret.window = true;
+        if(ua.indexOf("linux") >= 0) ret.linux = true;
+        if(ua.indexOf("mac os x") >= 0) ret.apple = true;
+        if(ua.indexOf("mobile") >= 0) ret.mobile = true;
+        if(ua.indexOf("android") >= 0) ret.andriod = true;
+        if(ua.indexOf("iphone") >= 0) ret.iphone = true;
+        if(ua.indexOf("ipad") >= 0) ret.ipad = true;
+        if(ua.indexOf("firefox") >= 0) ret.firefox = true;
+        if(ua.indexOf("chrome") >= 0) ret.chrome = true;
+        if(ua.indexOf("crios") >= 0) ret.chrome = true;
+        if(!ret.chrome && ua.indexOf("safari") >= 0) ret.safari = true;
+        return ret;
+    }
+
+
+
+    if('serviceWorker' in navigator) {
+        window.addEventListener("load", function(){
+            navigator.serviceWorker.register("/smart-app.js")
+                .then(function (registeration) {
+                    console.log("sw.js 注册成功", registeration.scope);
+                })
+                .catch(function(err){
+                    console.log("sw.js 注册失败",err);
+                });
+        });
+    }
+
+    var deferredPrompt;
+    var addBtn = document.getElementById("add-app");
+    var addDiv = document.getElementById("add-div");
+    var startBtn = document.getElementById("start-app");
+    setLange();
+    startBtn.addEventListener("click", function(){
+        window.location.href="start.html#?f=0";
+    });
+
+    window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        addDiv.style.display = 'block';
+        addBtn.addEventListener('click', function (e) {
+            canInstall = true;
+            addDiv.style.display = 'none';
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then( function(choiceResult) {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the SMART prompt');
+                    window.location.href="start.html";
+                } else {
+                    console.log('User dismissed the SMART prompt');
+                }
+                deferredPrompt = null;
+            });
+        });
+    });
+
+    function t() {
+        var nav = checkNav();
+        console.log(JSON.stringify(nav));
+        if(nav.weixin) {
+            //
+            // if(nav.android) {
+            //     document.getElementById("weixin-android-guide").style.display = "block";
+            //     return;
+            // }
+            // if(nav.iphone || nav.ipad) {
+            //     document.getElementById("weixin-ios-guide").style.display = "block";
+            //     return;
+            // }
+            window.location.href="start.html";
+            return;
+        }
+        if(nav.mobile && nav.safari) {
+            document.getElementById("safari-guide").style.display = "block";
+            return;
+        }
+        if(!nav.chrome) {
+            document.getElementById("suggest-guide").style.display = "block";
+            return;
+        }
+    }
+    t();
+
+</script>
+
+</html>
